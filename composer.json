@@ -1,0 +1,19 @@
+{
+    "name": "s.tanygin/antibot-lua-nginx",
+    "description": "Antibot by Nginx with Lua",
+    "type": "project",
+    "require": {
+        "symfony/console": "^5.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Console\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Sergey Tanygin",
+            "email": "s.tanygin@roseltorg.ru"
+        }
+    ]
+}

@@ -1,0 +1,44 @@
+version: '3'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./php.Dockerfile
+    container_name: antibot-app
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_KEY: "antibot:gos"
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+
+  nginx:
+    container_name: antibot-nginx
+    depends_on:
+      - app
+    build:
+      context: ./
+      dockerfile: ./nginx.Dockerfile
+    networks:
+      default:
+        aliases:
+          - antibot.lc
+    ports:
+      - "80:80"
+    tty: true
+    environment:
+      - REDIS_HOST=172.20.0.2
+      - REDIS_PORT=6379
+      - REDIS_KEY=antibot:gos
+    volumes:
+      - ./:/var/www/html
+      - ./nginx:/etc/nginx/templates
+
+  redis:
+    image: devilster/redis
+    container_name: antibot-redis
+    stdin_open: true
+    #tty: true
+    ports:
+      - "6379:6379"
