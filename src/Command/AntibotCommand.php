@@ -1,7 +1,8 @@
 <?php
 
-namespace Console;
+namespace Console\Command;
 
+use Console\Antibot;
 use Symfony\Component\Console\Command\Command;
 
 class AntibotCommand extends Command {

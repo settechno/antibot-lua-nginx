@@ -47,18 +47,6 @@ local function ip_in_cidr(ip, cidr)
 
 end
 
-local function ip_in_cidrs(ip, cidrs)
-  if type( cidrs ) ~= "table" then
-    return nil, "Invalid cidrs"
-  end
-  for _,cidr in ipairs(cidrs) do
-    if ip_in_cidr(ip, cidr) then
-      return true
-    end
-  end
-  return false
-end
-
 -- only update ip_blacklist from Redis once every cache_ttl seconds:
 if last_update_time == nil or last_update_time < ( ngx.now() - ngx.var.cache_ttl ) then
 
@@ -73,7 +61,7 @@ if last_update_time == nil or last_update_time < ( ngx.now() - ngx.var.cache_ttl
   else
     local new_ip_blacklist, err = red:get(ngx.var.redis_key)
 
-    if new_ip_blacklist == nil then
+    if err then
       ngx.log(ngx.ERROR, "Redis read error while retrieving ip_blacklist: " .. err)
     else
       -- replace the locally stored ip_blacklist with the updated values:

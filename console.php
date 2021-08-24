@@ -7,11 +7,11 @@ use Symfony\Component\Console\Application;
 
 $application = new Application();
 
-$application->add(new Console\RedisTestCommand());
+$application->add(new Console\Command\RedisTestCommand());
 
 // Команды антибота
-$application->add(new Console\AntibotBanCommand());
-$application->add(new Console\AntibotListCommand());
-$application->add(new Console\AntibotClearCommand());
+$application->add(new Console\Command\AntibotBanCommand());
+$application->add(new Console\Command\AntibotListCommand());
+$application->add(new Console\Command\AntibotClearCommand());
 
 $application->run();

@@ -3,7 +3,7 @@ services:
   app:
     build:
       context: .
-      dockerfile: ./php.Dockerfile
+      dockerfile: docker/php.Dockerfile
     container_name: antibot-app
     environment:
       REDIS_HOST: redis
@@ -19,7 +19,7 @@ services:
       - app
     build:
       context: ./
-      dockerfile: ./nginx.Dockerfile
+      dockerfile: docker/nginx.Dockerfile
     networks:
       default:
         aliases:
@@ -33,7 +33,7 @@ services:
       - REDIS_KEY=antibot:gos
     volumes:
       - ./:/var/www/html
-      - ./nginx:/etc/nginx/templates
+      - ./docker/template:/etc/nginx/templates
 
   redis:
     image: devilster/redis
