@@ -4,8 +4,66 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bc58bd6c194705fca6b33b4272feed07",
+    "content-hash": "575616cbc8011003aa88ea4a1b7a4471",
     "packages": [
+        {
+            "name": "koesie10/lua-serializer",
+            "version": "v0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/koesie10/LuaSerializer.git",
+                "reference": "51775d04081d88ea5778d5ae82f09dbdd8e7b157"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/koesie10/LuaSerializer/zipball/51775d04081d88ea5778d5ae82f09dbdd8e7b157",
+                "reference": "51775d04081d88ea5778d5ae82f09dbdd8e7b157",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "doctrine/common": "~2.6",
+                "jms/serializer": "~1.1",
+                "php": ">=5.5",
+                "phpunit/phpunit": "~4.4",
+                "symfony/form": "~2.8",
+                "symfony/validator": "~2.8"
+            },
+            "suggest": {
+                "jms/serializer": "Used to serialize/deserialize in e.g. Symfony2."
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Vlaswinkel\\Lua\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Koen Vlaswinkel",
+                    "email": "koen@vlaswinkel.info"
+                }
+            ],
+            "description": "A Lua serializer/deserializer",
+            "keywords": [
+                "deserialization",
+                "lua",
+                "parser",
+                "serialization",
+                "serializer"
+            ],
+            "support": {
+                "issues": "https://github.com/koesie10/LuaSerializer/issues",
+                "source": "https://github.com/koesie10/LuaSerializer/tree/master"
+            },
+            "time": "2017-12-19T15:29:12+00:00"
+        },
         {
             "name": "psr/container",
             "version": "1.1.1",

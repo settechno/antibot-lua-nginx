@@ -1,5 +1,3 @@
-package.path = package.path .. ";/etc/nginx/lua/?.lua"
-
 local ip_blacklist = ngx.shared.antibot
 local last_update_time = ip_blacklist:get("last_update_time");
 
@@ -65,20 +63,17 @@ if last_update_time == nil or last_update_time < ( ngx.now() - ngx.var.cache_ttl
       ngx.log(ngx.ERROR, "Redis read error while retrieving ip_blacklist: " .. err)
     else
       -- replace the locally stored ip_blacklist with the updated values:
-      local json = require "json"
       ip_blacklist:flush_all()
 
       if type(new_ip_blacklist) == "string" then
-          for banned_ip, banned_data in pairs(json.decode(new_ip_blacklist)) do
-            -- if ban time did not expired
-            if banned_data["time"] > ngx.now() then
-                local url = banned_data["url"]
-                if url == nil then
-                    url = false
+          new_ip_blacklist = load("return " .. new_ip_blacklist)
+          if new_ip_blacklist ~= nil then
+              for banned_ip, banned_data in pairs(new_ip_blacklist()) do
+                -- if ban time did not expired
+                if banned_data["time"] > ngx.now() then
+                    ip_blacklist:set(banned_ip, banned_data["url"] or false, banned_data["time"] - ngx.now())
                 end
-
-                ip_blacklist:set(banned_ip, url, banned_data["time"] - ngx.now())
-            end
+              end
           end
       end
 

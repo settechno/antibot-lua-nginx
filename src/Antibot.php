@@ -4,6 +4,8 @@
 namespace Console;
 
 
+use Vlaswinkel\Lua\Lua;
+
 class Antibot {
     /**
      * @var Redis
@@ -34,7 +36,7 @@ class Antibot {
             if ($ips === false) {
                 $ips = [];
             } else {
-                $ips = json_decode($ips, true);
+                $ips = $this->decode($ips);
             }
 
             $ips[$ip] = ['time' => time() + $expiredTime];
@@ -48,7 +50,7 @@ class Antibot {
                 }
             }
 
-            $this->cache->set($this->cacheKey, json_encode($ips), $maxExpiredTime);
+            $this->cache->set($this->cacheKey, $this->encode($ips), $maxExpiredTime);
         }
     }
 
@@ -68,7 +70,7 @@ class Antibot {
             if ($ips === false) {
                 $ips = [];
             } else {
-                $ips = json_decode($ips, true);
+                $ips = $this->decode($ips);
             }
         }
 
@@ -95,5 +97,26 @@ class Antibot {
         }
 
         return $url;
+    }
+
+    /**
+     * PHP массив в Lua таблицу
+     *
+     * @param array $data
+     *
+     * @return string
+     */
+    protected function encode(array $data):string {
+        return Lua::serialize($data);
+    }
+
+    /**
+     * Lua таблица в PHP массив
+     * @param string $data
+     *
+     * @return array
+     */
+    protected function decode(string $data): array {
+        return Lua::deserialize($data);
     }
 }

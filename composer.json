@@ -3,7 +3,8 @@
     "description": "Antibot by Nginx with Lua",
     "type": "project",
     "require": {
-        "symfony/console": "^5.3"
+        "symfony/console": "^5.3",
+        "koesie10/lua-serializer": "^0.4.0"
     },
     "autoload": {
         "psr-4": {

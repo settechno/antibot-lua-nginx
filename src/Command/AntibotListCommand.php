@@ -24,8 +24,8 @@ class AntibotListCommand extends AntibotCommand {
 
         foreach ($ips as $ip => $data) {
             $str = "IP $ip was banned till " . date("d.m.Y H:i:s", $data['time']);
-            if ($data['url'] !== null) {
-                $str .= "(URI {$data['url']})";
+            if (!empty($data['url'])) {
+                $str .= " (URI {$data['url']})";
             }
 
             $output->writeln($str);
