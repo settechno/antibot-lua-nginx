@@ -50,17 +50,17 @@ docker compose exec app php console.php list
 
 * Добавить IP в бан на 100 секунд для всех адресов
 ```bash
-docker compose exec app php console.php antibot:ban 172.20.0.1 10 
+docker compose exec app php console.php antibot:ban 172.20.0.1 100 
 ```
 
 * Добавить IP в бан на 200 секунд для адреса "authentication/login" 
 ```bash
-docker compose exec app php console.php antibot:ban 172.20.0.1 20 "authentication/login"  
+docker compose exec app php console.php antibot:ban 172.20.0.1 200 "authentication/login"  
 ```
 
-* Добавить CIDR в бан на 200 
+* Добавить CIDR в бан на 200 секунд
 ```bash
-docker compose exec app php console.php antibot:ban 172.20.0.1/32
+docker compose exec app php console.php antibot:ban 172.20.0.1/32 200
 ```
 
 * Очистка бан-листа
