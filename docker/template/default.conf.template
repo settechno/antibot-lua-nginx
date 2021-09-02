@@ -1,22 +1,21 @@
-lua_shared_dict antibot 1m;
+lua_package_path '/etc/nginx/lua/modules/?.lua;;';
+lua_shared_dict antibot 14m;
 
 server {
-
-    access_by_lua_file /etc/nginx/lua/antibot.lua;
+    access_by_lua_file /etc/nginx/lua/antibot-check.lua;
 
     # start antibot script configure
     set $redis_host ${REDIS_HOST};
     set $redis_port ${REDIS_PORT};
-    set $redis_connection_timeout 5;
     set $redis_key ${REDIS_KEY};
-    set $cache_ttl 10;
+    #set $redis_auth ${REDIS_AUTH}; # auth if necessary
     # end antibot script configure
 
+    index index.php;
     root /var/www/html/public;
-    client_max_body_size 500m;
     charset utf-8;
 
-    error_log /dev/stderr notice;
+    error_log /dev/stderr error;
 
     location ~ \.php$ {
         try_files $uri =404;
@@ -32,5 +31,21 @@ server {
         try_files $uri $uri/ /index.php?$query_string;
         gzip_static on;
     }
+
+     location = /antibot_update {
+         default_type 'text/plain';
+         content_by_lua_file /etc/nginx/lua/antibot-update.lua;
+     }
+
+     location = /antibot_test {
+         default_type 'text/plain';
+         content_by_lua_block {
+             local antibot = ngx.shared.antibot
+             local free_page_bytes = antibot:free_space()
+             ngx.say("Free space: " .. free_page_bytes .. " bytes")
+         }
+     }
+
+
 }
 

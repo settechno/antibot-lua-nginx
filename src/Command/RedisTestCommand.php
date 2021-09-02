@@ -24,6 +24,8 @@ class RedisTestCommand extends Command {
     {
         $redis = new Redis();
 
+        $content = $redis->get('antibot:gos');
+        file_put_contents('content.lua', $content);
         $redis->set($this->testKey, $this->testValue);
         if ($redis->get($this->testKey) === $this->testValue) {
             $output->write('Redis successfully working');

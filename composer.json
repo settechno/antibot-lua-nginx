@@ -4,7 +4,7 @@
     "type": "project",
     "require": {
         "symfony/console": "^5.3",
-        "koesie10/lua-serializer": "^0.4.0"
+        "ext-json": "*"
     },
     "autoload": {
         "psr-4": {

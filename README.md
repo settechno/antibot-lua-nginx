@@ -1,7 +1,7 @@
 # Антибот для nginx на lua с использованием redis
 
 ## Принцип работы
-Антибот работает на openresty (https://www.nginx.com/resources/wiki/modules/lua/), пропуская запросы к серверу через lua скрипт (antibot.lua). Внутри скрипта стоит опрос редиса на наличие забаненных адресов. Если какие-то адреса в бане есть и URL совпадает с указанным в бане (либо IP забанен для всех адресов), то выполнение сценария прерывается и клиенту выдается код 429 (Too many requests).
+Антибот работает на openresty (https://www.nginx.com/resources/wiki/modules/lua/), пропуская запросы к серверу через lua скрипт (antibot.lua). Внутри скрипта стоит опрос внутреннего справочника на наличие забаненных адресов. Если какие-то адреса в бане есть и URL совпадает с указанным в бане (либо IP забанен для всех адресов), то выполнение сценария прерывается и клиенту выдается код 429 (Too many requests).
 
 ## Локальный запуск приложения
 Для локального запуска приложения необходимо выполнить следующие действия:
@@ -26,21 +26,26 @@ $ make start
 ## Включение и конфигурация антибота
 Пример nginx конфига
 ```text
-lua_shared_dict antibot 1m;
+lua_package_path '/etc/nginx/lua/modules/?.lua;;';
+lua_shared_dict antibot 14m;
 
 server {
 
-    access_by_lua_file /etc/nginx/lua/antibot.lua;
+    access_by_lua_file /etc/nginx/lua/antibot-check.lua;
 
     # start antibot script configure
     set $redis_host ${REDIS_HOST};
     set $redis_port ${REDIS_PORT};
-    set $redis_connection_timeout 5;
     set $redis_key ${REDIS_KEY};
-    set $cache_ttl 10;
+    #set $redis_auth ${REDIS_AUTH}; # auth if necessary
     # end antibot script configure
+
+    location = /antibot_update {
+        default_type 'text/plain';
+        content_by_lua_file /etc/nginx/lua/antibot-update.lua;
+    }
 ```
-Здесь cache_ttl - время кеша в секундах, в течении которого антибот не обращается к редису для обновления данных
+При переходе на адрес http://antibot.lc/antibot_update происходит обновление справочника антибота. Данные берутся из редиса по ключу, указанному в nginx конфигурации. Внутри редиса данные хранятся в JSON формате.
 
 ## Консольные команды
 * Список доступных команд
@@ -48,19 +53,19 @@ server {
 docker compose exec app php console.php list
 ```
 
-* Добавить IP в бан на 100 секунд для всех адресов
+* Добавить IP в бан на 100 секунд для всех адресов сайта
 ```bash
-docker compose exec app php console.php antibot:ban 172.20.0.1 100 
+docker compose exec app php console.php antibot:ban 172.20.0.1 100 "antibot.lc"
 ```
 
-* Добавить IP в бан на 200 секунд для адреса "authentication/login" 
+* Добавить IP в бан на 200 секунд для адреса "antibot.lc/authentication/login" 
 ```bash
-docker compose exec app php console.php antibot:ban 172.20.0.1 200 "authentication/login"  
+docker compose exec app php console.php antibot:ban 172.20.0.1 200 "antibot.lc/authentication/login"  
 ```
 
-* Добавить CIDR в бан на 200 секунд
+* Добавить IP в бан на 20 секунд для всех сайтов 
 ```bash
-docker compose exec app php console.php antibot:ban 172.20.0.1/32 200
+docker compose exec app php console.php antibot:ban 172.20.0.1 20 
 ```
 
 * Очистка бан-листа
@@ -71,4 +76,9 @@ docker compose exec app php console.php antibot:clear
 * Просмотр бан-листа
 ```bash
 docker compose exec app php console.php antibot:list 
+```
+
+* Добавить 60000 произвольных адресов в бан на 500 секунд
+```bash
+docker compose exec app php console.php antibot:test 60000 500 
 ```

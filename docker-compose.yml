@@ -24,6 +24,7 @@ services:
       default:
         aliases:
           - antibot.lc
+          - antibot.loc
     ports:
       - "80:80"
     tty: true

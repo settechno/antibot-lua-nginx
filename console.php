@@ -8,6 +8,7 @@ use Symfony\Component\Console\Application;
 $application = new Application();
 
 $application->add(new Console\Command\RedisTestCommand());
+$application->add(new Console\Command\AntibotTestCommand());
 
 // Команды антибота
 $application->add(new Console\Command\AntibotBanCommand());
