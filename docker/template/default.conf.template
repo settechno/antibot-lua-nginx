@@ -8,6 +8,7 @@ server {
     set $redis_host ${REDIS_HOST};
     set $redis_port ${REDIS_PORT};
     set $redis_key ${REDIS_KEY};
+    set $refresh_key ${REFRESH_KEY}; # if necessary
     #set $redis_auth ${REDIS_AUTH}; # auth if necessary
     # end antibot script configure
 
