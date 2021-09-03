@@ -1,6 +1,6 @@
 <?php
 
-namespace Console\Command;
+namespace App\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -28,16 +28,14 @@ class AntibotTestCommand extends AntibotCommand {
         $count = intval($input->getArgument('count'));
         $time = intval($input->getArgument('time') ?? 600);
 
-        $ipData = [];
         while ($count >= 0) {
-            $ipData[] = [
-              'ip' => $this->generateIp(),
-              'expiredTime' => $time
-            ];
+            $this->antibot->add($this->generateIp(), $time);
             --$count;
         }
-        $this->antibot->banIps($ipData);
-        $output->writeln("Ban " . $input->getArgument('count') . " successfull");
+
+        $this->antibot->save();
+
+        $output->writeln("Ban " . $input->getArgument('count') . " successfully");
 
         return Command::SUCCESS;
     }

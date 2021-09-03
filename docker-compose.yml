@@ -11,7 +11,7 @@ services:
       REDIS_KEY: "antibot:gos"
     working_dir: /var/www/html
     volumes:
-      - ./:/var/www/html
+      - ./php:/var/www/html
 
   nginx:
     container_name: antibot-nginx
@@ -32,8 +32,9 @@ services:
       - REDIS_HOST=172.20.0.2
       - REDIS_PORT=6379
       - REDIS_KEY=antibot:gos
+      - REFRESH_KEY=ngr432n7vnb3dk
     volumes:
-      - ./:/var/www/html
+      - ./php:/var/www/html
       - ./docker/template:/etc/nginx/templates
 
   redis:

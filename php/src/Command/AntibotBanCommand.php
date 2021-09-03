@@ -1,6 +1,6 @@
 <?php
 
-namespace Console\Command;
+namespace App\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -32,9 +32,11 @@ class AntibotBanCommand extends AntibotCommand {
                 continue;
             }
 
-            $this->antibot->banIP($ip, $expiredTime, $url);
-            $output->writeln("IP $ip was banned successfull");
+            $this->antibot->add($ip, $expiredTime, $url);
         }
+
+        $this->antibot->save();
+        $output->writeln("IP " . $input->getArgument('ip') . " was banned successfully");
 
         return Command::SUCCESS;
     }

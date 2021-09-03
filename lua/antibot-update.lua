@@ -5,6 +5,13 @@ local redis = require "resty.redis"
 local red = redis:new()
 local json = require "json"
 
+if ngx.var.refresh_key ~= nil and ngx.var.arg_key ~= ngx.var.refresh_key then
+    ngx.status = 403
+    ngx.log(ngx.ERR, "Invalid refresh key")
+    ngx.say("Invalid refresh key")
+    return
+end
+
 local ok, err = red:connect(ngx.var.redis_host, tonumber(ngx.var.redis_port))
 if not ok then
     ngx.log(ngx.ERR, "Redis connection error while retrieving ip_blacklist: " .. err)
